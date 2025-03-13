@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación de Cirugías</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Programación de Cirugías</h1>
+        <form id="surgeryForm">
+            <label for="nombre">Nombre del Paciente:</label>
+            <input type="text" id="nombre" required>
+            
+            <label for="clave">Clave del Paciente:</label>
+            <input type="text" id="clave" required>
+            
+            <label for="diagnostico">Diagnóstico:</label>
+            <input type="text" id="diagnostico" required>
+            
+            <label for="cirugia">Cirugía Programada:</label>
+            <input type="text" id="cirugia" required>
+            
+            <label for="tiempo">Tiempo Quirúrgico (min):</label>
+            <input type="number" id="tiempo" required>
+            
+            <label for="anestesia">Anestesia Solicitada:</label>
+            <input type="text" id="anestesia" required>
+            
+            <label for="cirujano">Cirujano Responsable:</label>
+            <input type="text" id="cirujano" required>
+            
+            <label for="fecha">Fecha y Hora:</label>
+            <input type="datetime-local" id="fecha" required>
+            
+            <button type="submit">Programar Cirugía</button>
+        </form>
+        <h2>Lista de Cirugías Programadas</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Paciente</th>
+                    <th>Clave</th>
+                    <th>Diagnóstico</th>
+                    <th>Cirugía</th>
+                    <th>Tiempo</th>
+                    <th>Anestesia</th>
+                    <th>Cirujano</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody id="surgeryList"></tbody>
+        </table>
+        <button id="exportCSV">Exportar a CSV</button>
+    </div>
+    <script src="script.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        form {
+            display: grid;
+            gap: 10px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input {
+            padding: 8px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+    <script>
+        document.getElementById('surgeryForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = {
+                nombre: document.getElementById('nombre').value,
+                clave: document.getElementById('clave').value,
+                diagnostico: document.getElementById('diagnostico').value,
+                cirugia: document.getElementById('cirugia').value,
+                tiempo: document.getElementById('tiempo').value,
+                anestesia: document.getElementById('anestesia').value,
+                cirujano: document.getElementById('cirujano').value,
+                fecha: document.getElementById('fecha').value,
+            };
+            const row = `<tr>
+                <td>${formData.nombre}</td>
+                <td>${formData.clave}</td>
+                <td>${formData.diagnostico}</td>
+                <td>${formData.cirugia}</td>
+                <td>${formData.tiempo}</td>
+                <td>${formData.anestesia}</td>
+                <td>${formData.cirujano}</td>
+                <td>${formData.fecha}</td>
+            </tr>`;
+            document.getElementById('surgeryList').innerHTML += row;
+        });
+        document.getElementById('exportCSV').addEventListener('click', function() {
+            let csvContent = "data:text/csv;charset=utf-8,Paciente,Clave,Diagnóstico,Cirugía,Tiempo,Anestesia,Cirujano,Fecha\n";
+            document.querySelectorAll('#surgeryList tr').forEach(row => {
+                let rowData = Array.from(row.children).map(td => td.innerText).join(',');
+                csvContent += rowData + "\n";
+            });
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', 'cirugias_programadas.csv');
+            document.body.appendChild(link);
+            link.click();
+        });
+    </script>
+</body>
+</html>
