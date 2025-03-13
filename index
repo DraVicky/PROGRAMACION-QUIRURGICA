@@ -4,57 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Programación de Cirugías</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Programación de Cirugías</h1>
-        <form id="surgeryForm">
-            <label for="nombre">Nombre del Paciente:</label>
-            <input type="text" id="nombre" required>
-            
-            <label for="clave">Clave del Paciente:</label>
-            <input type="text" id="clave" required>
-            
-            <label for="diagnostico">Diagnóstico:</label>
-            <input type="text" id="diagnostico" required>
-            
-            <label for="cirugia">Cirugía Programada:</label>
-            <input type="text" id="cirugia" required>
-            
-            <label for="tiempo">Tiempo Quirúrgico (min):</label>
-            <input type="number" id="tiempo" required>
-            
-            <label for="anestesia">Anestesia Solicitada:</label>
-            <input type="text" id="anestesia" required>
-            
-            <label for="cirujano">Cirujano Responsable:</label>
-            <input type="text" id="cirujano" required>
-            
-            <label for="fecha">Fecha y Hora:</label>
-            <input type="datetime-local" id="fecha" required>
-            
-            <button type="submit">Programar Cirugía</button>
-        </form>
-        <h2>Lista de Cirugías Programadas</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Paciente</th>
-                    <th>Clave</th>
-                    <th>Diagnóstico</th>
-                    <th>Cirugía</th>
-                    <th>Tiempo</th>
-                    <th>Anestesia</th>
-                    <th>Cirujano</th>
-                    <th>Fecha</th>
-                </tr>
-            </thead>
-            <tbody id="surgeryList"></tbody>
-        </table>
-        <button id="exportCSV">Exportar a CSV</button>
-    </div>
-    <script src="script.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -73,7 +22,7 @@
         h1, h2 {
             text-align: center;
         }
-        form {
+        form, .buttons {
             display: grid;
             gap: 10px;
         }
@@ -112,7 +61,65 @@
             color: white;
         }
     </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Programación de Cirugías</h1>
+        <form id="surgeryForm">
+            <label for="nombre">Nombre del Paciente:</label>
+            <input type="text" id="nombre" required>
+            
+            <label for="clave">Clave del Paciente:</label>
+            <input type="text" id="clave" required>
+            
+            <label for="diagnostico">Diagnóstico:</label>
+            <input type="text" id="diagnostico" required>
+            
+            <label for="cirugia">Cirugía Programada:</label>
+            <input type="text" id="cirugia" required>
+            
+            <label for="tiempo">Tiempo Quirúrgico (min):</label>
+            <input type="number" id="tiempo" required>
+            
+            <label for="anestesia">Anestesia Solicitada:</label>
+            <input type="text" id="anestesia" required>
+            
+            <label for="cirujano">Cirujano Responsable:</label>
+            <input type="text" id="cirujano" required>
+            
+            <label for="fecha">Fecha y Hora:</label>
+            <input type="datetime-local" id="fecha" required>
+            
+            <button type="submit">Programar Cirugía</button>
+        </form>
+        <div class="buttons">
+            <button onclick="toggleView()">Ver Cirugías Programadas</button>
+        </div>
+        <div id="surgeryListContainer" style="display:none;">
+            <h2>Lista de Cirugías Programadas</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Paciente</th>
+                        <th>Clave</th>
+                        <th>Diagnóstico</th>
+                        <th>Cirugía</th>
+                        <th>Tiempo</th>
+                        <th>Anestesia</th>
+                        <th>Cirujano</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody id="surgeryList"></tbody>
+            </table>
+            <button onclick="exportToExcel()">Exportar a Excel</button>
+        </div>
+    </div>
     <script>
+        function toggleView() {
+            let container = document.getElementById('surgeryListContainer');
+            container.style.display = container.style.display === 'none' ? 'block' : 'none';
+        }
         document.getElementById('surgeryForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const formData = {
@@ -137,7 +144,7 @@
             </tr>`;
             document.getElementById('surgeryList').innerHTML += row;
         });
-        document.getElementById('exportCSV').addEventListener('click', function() {
+        function exportToExcel() {
             let csvContent = "data:text/csv;charset=utf-8,Paciente,Clave,Diagnóstico,Cirugía,Tiempo,Anestesia,Cirujano,Fecha\n";
             document.querySelectorAll('#surgeryList tr').forEach(row => {
                 let rowData = Array.from(row.children).map(td => td.innerText).join(',');
@@ -149,7 +156,7 @@
             link.setAttribute('download', 'cirugias_programadas.csv');
             document.body.appendChild(link);
             link.click();
-        });
+        }
     </script>
 </body>
 </html>
